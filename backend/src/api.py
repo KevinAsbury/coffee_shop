@@ -52,36 +52,37 @@ def post_drinks():
 
     return jsonify({"success": True, "drinks": result}), 200
 
-'''
-@TODO implement endpoint
-    PATCH /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should update the corresponding row for <id>
-        it should require the 'patch:drinks' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
-        or appropriate status code indicating reason for failure
-'''
+
 @app.route('/drinks/<int:id_num>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_drink():
-    return jsonify({"success": True, "drinks": []}), 200
+def update_drink(id_num):
+    drink = Drink.query.get(id_num)
 
-'''
-@TODO implement endpoint
-    DELETE /drinks/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should delete the corresponding row for <id>
-        it should require the 'delete:drinks' permission
-    returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
-        or appropriate status code indicating reason for failure
-'''
+    if drink == None:
+        abort(404)
+    
+    data = request.get_json()
+
+    if data == None:
+        abort(422)
+
+    drink.title = data['title']
+    drink.recipe = data['recipe']
+    drink.update()
+
+    return jsonify({"success": True, "drinks": [drink.long()]}), 200
+
+
 @app.route('/drinks/<int:id_num>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drink(id_num):
-    return jsonify({"success": True, "delete": 0}), 200
+    drink = Drink.query.get(id_num)
+
+    if drink == None:
+        abort(404)
+
+    drink.delete()
+    return jsonify({"success": True, "delete": id_num}), 200
 
 
 ## Error Handling
