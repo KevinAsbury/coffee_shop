@@ -27,7 +27,9 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks', methods=['GET'])
+def get_drinks():
+    return jsonify({"success": True, "drinks": []}), 200
 
 '''
 @TODO implement endpoint
@@ -37,7 +39,9 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks-detail', methods=['GET'])
+def get_drinks_detail():
+    return jsonify({"success": True, "drinks": []}), 200
 
 '''
 @TODO implement endpoint
@@ -48,7 +52,9 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks', methods=['POST'])
+def post_drinks():
+    return jsonify({"success": True, "drinks": []}), 200
 
 '''
 @TODO implement endpoint
@@ -61,7 +67,9 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<int:id_num>', methods=['PATCH'])
+def update_drink():
+    return jsonify({"success": True, "drinks": []}), 200
 
 '''
 @TODO implement endpoint
@@ -73,7 +81,9 @@ CORS(app)
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-
+@app.route('/drinks/<int:id_num>', methods=['DELETE'])
+def delete_drink(id_num):
+    return jsonify({"success": True, "delete": 0}), 200
 
 ## Error Handling
 '''
