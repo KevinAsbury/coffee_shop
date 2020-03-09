@@ -62,8 +62,9 @@ def post_drinks(token):
 
 @app.route('/drinks/<int:id_num>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_drink(id_num):
+def update_drink(token, id_num):
     drink = Drink.query.get(id_num)
+    result = []
 
     if drink == None:
         abort(404)
@@ -72,12 +73,24 @@ def update_drink(id_num):
 
     if data == None:
         abort(422)
+    
+    update = False
 
-    drink.title = data['title']
-    drink.recipe = data['recipe']
-    drink.update()
+    if 'recipe' in data:
+        recipe = data.get('recipe', '')
+        drink.recipe = json.dumps(recipe)
+        update = True
 
-    return jsonify({"success": True, "drinks": [drink.long()]}), 200
+    if 'title' in data:
+        drink.title = data.get('title', '')
+        update = True
+    
+    if update:
+        drink.update()
+
+    result = drink.long()
+
+    return jsonify({"success": True, "drinks": result}), 200
 
 
 @app.route('/drinks/<int:id_num>', methods=['DELETE'])
