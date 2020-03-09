@@ -45,6 +45,7 @@ def get_drinks_detail(token):
 def post_drinks(token):
     if 'post:drinks' not in token.get('permissions'):
         abort(401)
+
     result = []
 
     input = request.get_json()
@@ -63,6 +64,9 @@ def post_drinks(token):
 @app.route('/drinks/<int:id_num>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def update_drink(token, id_num):
+    if 'patch:drinks' not in token.get('permissions'):
+        abort(401)
+
     drink = Drink.query.get(id_num)
     result = []
 
@@ -95,7 +99,10 @@ def update_drink(token, id_num):
 
 @app.route('/drinks/<int:id_num>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_drink(id_num):
+def delete_drink(token, id_num):
+    if 'delete:drinks' not in token.get('permissions'):
+        abort(401)
+    
     drink = Drink.query.get(id_num)
 
     if drink == None:
