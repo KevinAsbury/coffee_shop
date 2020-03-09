@@ -16,7 +16,7 @@ CORS(app)
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-db_drop_and_create_all()
+# db_drop_and_create_all()
 
 ## ROUTES
 @app.route('/drinks', methods=['GET'])
@@ -30,7 +30,9 @@ def get_drinks():
 
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
-def get_drinks_detail():
+def get_drinks_detail(token):
+    if 'get:drinks-detail' not in token.get('permissions'):
+        abort(401)
     all_drinks = Drink.query.all()
     if len(all_drinks) == 0:
         abort(404)
